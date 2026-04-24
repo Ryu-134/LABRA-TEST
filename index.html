@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labra Deployment Proof</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --base: #24273a;
+      --mantle: #1e2030;
+      --crust: #181926;
+      --text: #cad3f5;
+      --subtext: #a5adcb;
+      --overlay: #6e738d;
+      --blue: #8aadf4;
+      --lavender: #b7bdf8;
+      --sapphire: #7dc4e4;
+      --teal: #8bd5ca;
+      --green: #a6da95;
+      --mauve: #c6a0f6;
+      --peach: #f5a97f;
+      --pink: #f5bde6;
+      --yellow: #eed49f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      position: relative;
+      overflow: hidden;
+      font-family: "Sora", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(138, 173, 244, 0.16), transparent 24%),
+        radial-gradient(circle at 84% 76%, rgba(166, 218, 149, 0.12), transparent 28%),
+        radial-gradient(circle at 60% 24%, rgba(245, 189, 230, 0.10), transparent 22%),
+        linear-gradient(160deg, #10111b 0%, var(--crust) 46%, #0b0c12 100%);
+    }
+
+    #starfield {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .glow {
+      position: fixed;
+      pointer-events: none;
+      filter: blur(72px);
+      opacity: 0.35;
+      mix-blend-mode: screen;
+      z-index: 1;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+
+    .glow-a {
+      width: 320px;
+      height: 320px;
+      left: -90px;
+      top: -120px;
+      background: radial-gradient(circle at 40% 40%, rgba(138, 173, 244, 0.8), rgba(138, 173, 244, 0));
+    }
+
+    .glow-b {
+      width: 360px;
+      height: 360px;
+      right: -110px;
+      bottom: -140px;
+      background: radial-gradient(circle at 55% 48%, rgba(198, 160, 246, 0.8), rgba(198, 160, 246, 0));
+      animation-duration: 18s;
+      animation-direction: alternate-reverse;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(760px, 96vw);
+      border-radius: 20px;
+      border: 1px solid rgba(183, 189, 248, 0.20);
+      background:
+        linear-gradient(150deg, rgba(36, 39, 58, 0.82), rgba(24, 25, 38, 0.88));
+      backdrop-filter: blur(6px);
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(138, 173, 244, 0.12) inset,
+        0 0 40px rgba(138, 173, 244, 0.16);
+      padding: clamp(20px, 4vw, 40px);
+      transform: translateY(14px);
+      opacity: 0;
+      animation: fade-up 900ms cubic-bezier(0.2, 0.9, 0.1, 1) forwards;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--subtext);
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 5vw, 3.1rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      background: linear-gradient(95deg, var(--text) 0%, var(--lavender) 34%, var(--sapphire) 64%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .desc {
+      margin: 14px 0 0;
+      max-width: 65ch;
+      color: var(--subtext);
+      font-size: clamp(0.93rem, 2.1vw, 1.03rem);
+      line-height: 1.6;
+      text-wrap: pretty;
+    }
+
+    .chips {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      border: 1px solid rgba(183, 189, 248, 0.22);
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      background: linear-gradient(140deg, rgba(138, 173, 244, 0.15), rgba(125, 196, 228, 0.08));
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25);
+      animation: chip-glow 3.2s ease-in-out infinite;
+    }
+
+    .chip:nth-child(2) { animation-delay: 400ms; }
+    .chip:nth-child(3) { animation-delay: 800ms; }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--overlay);
+      letter-spacing: 0.03em;
+    }
+
+    @keyframes fade-up {
+      from {
+        transform: translateY(14px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes chip-glow {
+      0%, 100% {
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25), 0 0 0 rgba(138, 173, 244, 0);
+      }
+      50% {
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32), 0 0 18px rgba(138, 173, 244, 0.35);
+      }
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      to {
+        transform: translate3d(24px, -16px, 0) scale(1.08);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .card {
+        border-radius: 16px;
+      }
+
+      .chips {
+        gap: 8px;
+      }
+
+      .chip {
+        font-size: 0.75rem;
+        padding: 7px 11px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card,
+      .chip,
+      .glow {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+
+  <main class="shell">
+    <section class="card">
+      <p class="eyebrow">Static Deployment Probe</p>
+      <h1>Deployment Successful</h1>
+      <p class="desc">
+        This single-page static app is a visual smoke test for the Labra project environment.
+        If you can see this in the deployed URL, static hosting, TLS, routing, and CDN delivery are all functioning.
+      </p>
+      <div class="chips" aria-label="deployment checks">
+        <span class="chip">Static Hosting Active</span>
+        <span class="chip">CDN Delivery Healthy</span>
+        <span class="chip">Client Render Confirmed</span>
+      </div>
+      <p class="footer">Rendered on: <span id="render-time"></span></p>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("starfield");
+      const ctx = canvas.getContext("2d", { alpha: true });
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const renderTime = document.getElementById("render-time");
+      renderTime.textContent = new Date().toLocaleString();
+
+      const palette = [
+        "#f4dbd6", "#f0c6c6", "#f5bde6", "#c6a0f6", "#f5a97f", "#eed49f",
+        "#a6da95", "#8bd5ca", "#91d7e3", "#7dc4e4", "#8aadf4", "#b7bdf8"
+      ];
+
+      const stars = [];
+      const meteors = [];
+      const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+
+      let width = 0;
+      let height = 0;
+      let cx = 0;
+      let cy = 0;
+      let dpr = 1;
+      let last = performance.now();
+
+      const toRgba = (hex, alpha) => {
+        const raw = hex.replace("#", "");
+        const value = Number.parseInt(raw, 16);
+        const r = (value >> 16) & 255;
+        const g = (value >> 8) & 255;
+        const b = value & 255;
+        return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+      };
+
+      const rand = (min, max) => Math.random() * (max - min) + min;
+
+      const starCount = () => {
+        const target = Math.floor((width * height) / 3200);
+        const min = reduceMotion ? 120 : 180;
+        const max = reduceMotion ? 260 : 620;
+        return Math.max(min, Math.min(max, target));
+      };
+
+      const makeStar = (randomY = true) => ({
+        x: Math.random() * width,
+        y: randomY ? Math.random() * height : -8,
+        size: rand(0.35, 1.65),
+        layer: rand(0.24, 1.35),
+        speed: rand(6, 26),
+        twinkleSpeed: rand(0.8, 2.5),
+        phase: rand(0, Math.PI * 2),
+        color: palette[Math.floor(Math.random() * palette.length)]
+      });
+
+      const resetCanvas = () => {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        cx = width * 0.5;
+        cy = height * 0.5;
+
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        stars.length = 0;
+
+        for (let i = 0; i < starCount(); i += 1) {
+          stars.push(makeStar());
+        }
+      };
+
+      const spawnMeteor = () => {
+        if (reduceMotion) {
+          return;
+        }
+
+        const startX = rand(width * 0.15, width * 0.95);
+        const startY = rand(-40, height * 0.35);
+        const speed = rand(420, 780);
+        const angle = rand(2.2, 2.45);
+
+        meteors.push({
+          x: startX,
+          y: startY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          length: rand(80, 180),
+          life: 0,
+          ttl: rand(0.42, 0.82),
+          color: palette[Math.floor(Math.random() * palette.length)]
+        });
+      };
+
+      const drawStars = (dt, elapsed) => {
+        for (let i = 0; i < stars.length; i += 1) {
+          const s = stars[i];
+          s.y += (s.speed * s.layer * dt) / 1000;
+
+          if (s.y > height + 8) {
+            Object.assign(s, makeStar(false));
+          }
+
+          const px = s.x + pointer.x * (16 * s.layer);
+          const py = s.y + pointer.y * (10 * s.layer);
+
+          if (px < -20 || px > width + 20 || py < -20 || py > height + 20) {
+            continue;
+          }
+
+          const twinkle = 0.55 + 0.45 * Math.sin(elapsed * 0.001 * s.twinkleSpeed + s.phase);
+          const size = s.size * (0.82 + twinkle * 0.4);
+          const alpha = 0.25 + twinkle * 0.7;
+
+          ctx.fillStyle = toRgba(s.color, alpha);
+          ctx.fillRect(Math.round(px), Math.round(py), size, size);
+
+          if (size > 1.05) {
+            const trailAlpha = Math.min(0.55, alpha * 0.5);
+            ctx.strokeStyle = toRgba(s.color, trailAlpha);
+            ctx.lineWidth = 0.7;
+            ctx.beginPath();
+            ctx.moveTo(px - size * 1.9, py + size * 0.5);
+            ctx.lineTo(px + size * 2.2, py + size * 0.5);
+            ctx.moveTo(px + size * 0.5, py - size * 1.9);
+            ctx.lineTo(px + size * 0.5, py + size * 2.2);
+            ctx.stroke();
+          }
+        }
+      };
+
+      const drawMeteors = (dt) => {
+        if (!reduceMotion && Math.random() < dt / 2500) {
+          spawnMeteor();
+        }
+
+        for (let i = meteors.length - 1; i >= 0; i -= 1) {
+          const m = meteors[i];
+          m.life += dt / 1000;
+
+          if (m.life >= m.ttl) {
+            meteors.splice(i, 1);
+            continue;
+          }
+
+          m.x += (m.vx * dt) / 1000;
+          m.y += (m.vy * dt) / 1000;
+
+          const lifeRatio = 1 - m.life / m.ttl;
+          const nx = m.vx / Math.hypot(m.vx, m.vy);
+          const ny = m.vy / Math.hypot(m.vx, m.vy);
+          const tx = m.x - nx * m.length;
+          const ty = m.y - ny * m.length;
+
+          const grad = ctx.createLinearGradient(m.x, m.y, tx, ty);
+          grad.addColorStop(0, toRgba(m.color, lifeRatio));
+          grad.addColorStop(1, toRgba(m.color, 0));
+
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          ctx.moveTo(m.x + pointer.x * 10, m.y + pointer.y * 6);
+          ctx.lineTo(tx + pointer.x * 10, ty + pointer.y * 6);
+          ctx.stroke();
+        }
+      };
+
+      const frame = (now) => {
+        const dt = Math.min(40, now - last);
+        last = now;
+
+        pointer.x += (pointer.tx - pointer.x) * 0.075;
+        pointer.y += (pointer.ty - pointer.y) * 0.075;
+
+        ctx.clearRect(0, 0, width, height);
+
+        drawStars(dt, now);
+        drawMeteors(dt);
+
+        requestAnimationFrame(frame);
+      };
+
+      window.addEventListener("resize", resetCanvas);
+      window.addEventListener("pointermove", (event) => {
+        pointer.tx = (event.clientX - cx) / cx;
+        pointer.ty = (event.clientY - cy) / cy;
+      });
+      window.addEventListener("pointerleave", () => {
+        pointer.tx = 0;
+        pointer.ty = 0;
+      });
+
+      resetCanvas();
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>
