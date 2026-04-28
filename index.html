@@ -96,7 +96,8 @@
     }
 
     .card {
-      width: min(760px, 96vw);
+      width: min(860px, 96vw);
+      min-height: min(62vh, 560px);
       border-radius: 20px;
       border: 1px solid rgba(183, 189, 248, 0.20);
       background:
@@ -107,13 +108,19 @@
         0 0 0 1px rgba(138, 173, 244, 0.12) inset,
         0 0 40px rgba(138, 173, 244, 0.16);
       padding: clamp(20px, 4vw, 40px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
       transform: translateY(14px);
       opacity: 0;
       animation: fade-up 900ms cubic-bezier(0.2, 0.9, 0.1, 1) forwards;
     }
 
     .eyebrow {
-      margin: 0 0 12px;
+      margin: 0;
       font-size: 0.72rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
@@ -123,52 +130,22 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(1.9rem, 5vw, 3.1rem);
-      line-height: 1.08;
+      font-size: clamp(2.8rem, 9vw, 6rem);
+      line-height: 0.98;
       letter-spacing: -0.02em;
       text-wrap: balance;
-      background: linear-gradient(95deg, var(--text) 0%, var(--lavender) 34%, var(--sapphire) 64%, var(--teal) 100%);
+      background: linear-gradient(110deg, var(--text) 0%, var(--lavender) 25%, var(--sapphire) 50%, var(--teal) 75%, var(--yellow) 100%);
+      background-size: 220% 220%;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      animation: gradient-shift 9s ease-in-out infinite;
     }
-
-    .desc {
-      margin: 14px 0 0;
-      max-width: 65ch;
-      color: var(--subtext);
-      font-size: clamp(0.93rem, 2.1vw, 1.03rem);
-      line-height: 1.6;
-      text-wrap: pretty;
-    }
-
-    .chips {
-      margin-top: 22px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .chip {
-      border: 1px solid rgba(183, 189, 248, 0.22);
-      border-radius: 999px;
-      padding: 8px 13px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      color: var(--text);
-      background: linear-gradient(140deg, rgba(138, 173, 244, 0.15), rgba(125, 196, 228, 0.08));
-      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25);
-      animation: chip-glow 3.2s ease-in-out infinite;
-    }
-
-    .chip:nth-child(2) { animation-delay: 400ms; }
-    .chip:nth-child(3) { animation-delay: 800ms; }
 
     .footer {
-      margin-top: 20px;
-      font-size: 0.78rem;
-      color: var(--overlay);
+      margin-top: 6px;
+      font-size: 0.84rem;
+      color: var(--subtext);
       letter-spacing: 0.03em;
     }
 
@@ -183,12 +160,15 @@
       }
     }
 
-    @keyframes chip-glow {
-      0%, 100% {
-        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25), 0 0 0 rgba(138, 173, 244, 0);
+    @keyframes gradient-shift {
+      0% {
+        background-position: 0% 50%;
       }
       50% {
-        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32), 0 0 18px rgba(138, 173, 244, 0.35);
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
       }
     }
 
@@ -204,22 +184,14 @@
     @media (max-width: 700px) {
       .card {
         border-radius: 16px;
-      }
-
-      .chips {
-        gap: 8px;
-      }
-
-      .chip {
-        font-size: 0.75rem;
-        padding: 7px 11px;
+        min-height: min(52vh, 420px);
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .card,
-      .chip,
-      .glow {
+      .glow,
+      h1 {
         animation: none !important;
       }
     }
@@ -234,15 +206,6 @@
     <section class="card">
       <p class="eyebrow">Static Deployment Probe</p>
       <h1>Deployment Successful</h1>
-      <p class="desc">
-        This single-page static app is a visual smoke test for the Labra project environment.
-        If you can see this in the deployed URL, static hosting, TLS, routing, and CDN delivery are all functioning.
-      </p>
-      <div class="chips" aria-label="deployment checks">
-        <span class="chip">Static Hosting Active</span>
-        <span class="chip">CDN Delivery Healthy</span>
-        <span class="chip">Client Render Confirmed</span>
-      </div>
       <p class="footer">Rendered on: <span id="render-time"></span></p>
     </section>
   </main>
