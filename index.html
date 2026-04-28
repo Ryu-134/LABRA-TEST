@@ -96,8 +96,8 @@
     }
 
     .card {
-      width: min(680px, 92vw);
-      min-height: min(38vh, 360px);
+      width: min(850px, 94vw);
+      min-height: min(48vh, 450px);
       border-radius: 20px;
       border: 1px solid rgba(183, 189, 248, 0.20);
       background:
@@ -107,13 +107,13 @@
         0 20px 60px rgba(0, 0, 0, 0.55),
         0 0 0 1px rgba(138, 173, 244, 0.12) inset,
         0 0 40px rgba(138, 173, 244, 0.16);
-      padding: clamp(20px, 3.5vw, 32px);
+      padding: clamp(26px, 4.5vw, 40px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      gap: 8px;
+      gap: 10px;
       transform: translateY(14px);
       opacity: 0;
       animation: fade-up 900ms cubic-bezier(0.2, 0.9, 0.1, 1) forwards;
@@ -121,8 +121,8 @@
 
     .eyebrow {
       margin: 0;
-      max-width: 28rem;
-      font-size: 0.72rem;
+      max-width: 35rem;
+      font-size: 0.9rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--subtext);
@@ -131,8 +131,8 @@
 
     h1 {
       margin: 0;
-      max-width: 10ch;
-      font-size: clamp(2.8rem, 9vw, 6rem);
+      max-width: 12ch;
+      font-size: clamp(3.5rem, 11vw, 7.5rem);
       line-height: 0.98;
       letter-spacing: -0.02em;
       text-wrap: balance;
@@ -146,8 +146,8 @@
 
     .footer {
       margin-top: 2px;
-      max-width: 28rem;
-      font-size: 0.84rem;
+      max-width: 35rem;
+      font-size: 1.05rem;
       color: var(--subtext);
       letter-spacing: 0.03em;
     }
@@ -187,7 +187,7 @@
     @media (max-width: 700px) {
       .card {
         border-radius: 16px;
-        min-height: min(32vh, 280px);
+        min-height: min(40vh, 350px);
       }
     }
 
