@@ -35,10 +35,46 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Setup Terraform
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Restore Terraform state cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            infra/terraform.tfstate
+            infra/terraform.tfstate.backup
+          key: terraform-state-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            terraform-state-${{ github.ref_name }}-
+
+      - name: Terraform apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          terraform -chdir=infra init -backend=false
+          terraform -chdir=infra apply -auto-approve
+
+      - name: Save Terraform state cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            infra/terraform.tfstate
+            infra/terraform.tfstate.backup
+          key: terraform-state-${{ github.ref_name }}-${{ github.run_id }}
+
+      - name: Load Terraform outputs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "S3_BUCKET=$(terraform -chdir=infra output -raw s3_bucket_name)" >> "$GITHUB_ENV"
+          echo "CLOUDFRONT_DISTRIBUTION_ID=$(terraform -chdir=infra output -raw cloudfront_distribution_id)" >> "$GITHUB_ENV"
+
       - name: Upload site to S3
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: aws s3 sync dist/ "s3://${{ secrets.S3_BUCKET }}" --delete
+        run: aws s3 sync dist/ "s3://${S3_BUCKET}" --delete
 
       - name: Invalidate CloudFront cache
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: aws cloudfront create-invalidation --distribution-id "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"

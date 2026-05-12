@@ -55,7 +55,7 @@ Have these files/tabs ready to click quickly:
 
 ### Part B: What it does in this project
 [Dialogue]
-"In my project, on every PR it creates a tiny static build and runs one smoke test. On pushes to main, it deploys those files to S3 and invalidates CloudFront so updates appear quickly."
+"In my project, on every PR it creates a tiny static build and runs one smoke test. On pushes to main, it first applies Terraform to create or update infrastructure, then deploys to S3 and invalidates CloudFront."
 
 [Action]
 - Switch from PPT to code.
@@ -63,7 +63,8 @@ Have these files/tabs ready to click quickly:
 - Show these lines of code:
   - Lines 3-6: workflow triggers (`pull_request` and push to `main`).
   - Lines 22-28: static build + smoke test.
-  - Lines 30-44: main-only deploy steps (AWS creds, S3 sync, CloudFront invalidation).
+  - Lines 30-72: main-only infrastructure steps (AWS creds, Terraform apply, output loading).
+  - Lines 74-80: deploy steps (S3 sync + CloudFront invalidation).
 
 ### Part C: Why I love it
 [Dialogue]
